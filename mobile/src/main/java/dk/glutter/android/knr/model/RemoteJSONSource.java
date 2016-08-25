@@ -41,8 +41,9 @@ public class RemoteJSONSource implements MusicProviderSource {
     private static final String TAG = LogHelper.makeLogTag(RemoteJSONSource.class);
 
     // http://storage.googleapis.com/automotive-media/music.json
-    protected static final String CATALOG_URL =
-        "http://private-a6f03-knr.apiary-mock.com/getmusiclist";
+    //"http://private-a6f03-knr.apiary-mock.com/getmusiclist";
+    protected static final String CATALOG_URL = "http://hgl.azurewebsites.net/api/Values";
+
 
     private static final String JSON_MUSIC = "music";
     private static final String JSON_TITLE = "title";
@@ -63,13 +64,7 @@ public class RemoteJSONSource implements MusicProviderSource {
             JSONObject jsonObj = fetchJSONFromUrl(CATALOG_URL);
             ArrayList<MediaMetadataCompat> tracks = new ArrayList<>();
             if (jsonObj != null) {
-                JSONArray jsonTracks = jsonObj.getJSONArray(JSON_MUSIC);
-
-                if (jsonTracks != null) {
-                    for (int j = 0; j < jsonTracks.length(); j++) {
-                        tracks.add(buildFromJSON(jsonTracks.getJSONObject(j), path));
-                    }
-                }
+                        tracks.add(buildFromJSON(jsonObj, path));
             }
             return tracks.iterator();
         } catch (JSONException e) {
@@ -130,10 +125,6 @@ public class RemoteJSONSource implements MusicProviderSource {
     private JSONObject fetchJSONFromUrl(String urlString) throws JSONException {
         BufferedReader reader = null;
         try {
-            JSONObject obj = new JSONObject("{  'question': 'Favourite programming language?',  'choices': [    'Swift',    'Python',    'Objective-C',    'Ruby',    'Bubby',    'JAVA'  ]}");
-
-
-
             URLConnection urlConnection = new URL(urlString).openConnection();
             reader = new BufferedReader(new InputStreamReader(
                     urlConnection.getInputStream(), "iso-8859-1"));
